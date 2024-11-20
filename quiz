@@ -1,0 +1,43 @@
+# Function to load quiz data from a file
+def load_quiz_data(file_path):
+    quiz_data = []
+    try:
+        with open(file_path, "r") as file:
+            for line in file:
+                parts = line.strip().split('|')
+                if len(parts) == 6:  # Ensure the line is properly formatted
+                    question, *options, answer = parts
+                    quiz_data.append({"question": question, "options": options, "answer": answer})
+    except FileNotFoundError:
+        print("Quiz data file not found!")
+        exit()
+    return quiz_data
+
+# Function to run the quiz
+def run_quiz(quiz_data):
+    print("Welcome to the Quiz App!")
+    score = 0  # Score counter
+
+    for i, question in enumerate(quiz_data, start=1):
+        print(f"\nQuestion {i}: {question['question']}")
+        for option in question["options"]:
+            print(option)
+
+        # Get user input
+        user_answer = input("Enter your answer (A, B, C, D): ").strip().upper()
+
+        # Check the answer
+        if user_answer == question["answer"]:
+            print("Correct!")
+            score += 1
+        else:
+            print(f"Wrong! The correct answer was {question['answer']}.")
+
+    # Show final score
+    print(f"\nQuiz completed! Your final score is: {score}/{len(quiz_data)}")
+
+# Main program
+if __name__ == "__main__":
+    file_path = "quiz_data.txt"  # Path to the quiz data file
+    quiz_data = load_quiz_data(file_path)  # Load data from the file
+    run_quiz(quiz_data)  # Run the quiz
